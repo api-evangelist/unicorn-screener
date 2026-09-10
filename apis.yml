@@ -1,0 +1,42 @@
+name: Unicorn Screener
+description: 'Startup research and screening over an HTTP JSON API: resolve a company name, look up a startup score
+  and summary, request an asynchronous screening, and follow its status to a permanent web memo. For early-stage
+  company research and comparison.'
+url: https://raw.githubusercontent.com/api-evangelist/unicorn-screener/refs/heads/main/apis.yml
+created: '2026-09-10'
+modified: '2026-09-10'
+specificationVersion: '0.21'
+tags:
+- Venture Capital
+- Startups
+- Company Research
+- Screening
+- Investing
+- AI Agents
+apis:
+- name: Unicorn Screener API
+  description: HTTP JSON API, 4 paths in the served OpenAPI 3.1; a keyless agent lookup answers live.
+  humanURL: https://unicornscreener.vc/docs/ai-agents
+  baseURL: https://unicornscreener.vc
+  tags:
+  - Venture Capital
+  - Startups
+  properties:
+  - type: OpenAPI
+    url: https://unicornscreener.vc/openapi.json
+  - type: Documentation
+    url: https://unicornscreener.vc/docs/ai-agents
+  - type: LLMsTxt
+    url: https://unicornscreener.vc/llms.txt
+  - type: LLMsFullTxt
+    url: https://unicornscreener.vc/llms-full.txt
+common:
+- type: Website
+  url: https://unicornscreener.vc
+maintainers:
+- FN: Unicorn Screener
+  url: https://unicornscreener.vc
+x-source:
+  via: api-search/inbox#28 (buffalodebile)
+  fetched: '2026-09-10'
+  note: Pointers probed 200 via curl (the host 403s urllib), control 404s, keyless lookup returned JSON.
