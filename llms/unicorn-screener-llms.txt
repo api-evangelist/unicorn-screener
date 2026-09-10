@@ -1,0 +1,84 @@
+# Unicorn Screener
+> Score any startup on its unicorn potential. Get a detailed analysis across five dimensions with a 100-point scoring algorithm.
+
+## About
+Unicorn Screener is a startup analysis platform at unicornscreener.vc. Enter any startup name or URL and receive a comprehensive report scoring the startup across five key dimensions: Founder Background, Strategic Position, Execution Velocity, Traction Momentum, and Market & Scalability. Each startup receives a score out of 100 based on a proprietary algorithm backed by academic research on unicorn startups.
+
+## Key Facts
+- Website: https://unicornscreener.vc
+- Pricing: One free report per user, then $9 per report (one-time, no subscription)
+- Agent API: HTTP JSON API with no API key: /api/agent/lookup, /api/autocomplete, /api/request-report, /api/screen-status. Import /openapi.json
+- Data sources: Publicly available startup data (Crunchbase, LinkedIn, company websites, news)
+- Output: Web memo at /leaderboard/<slug> with scores, evidence, and founder profiles. The request-report API requires an email and sends a memo link when ready
+- No account required for the first free report
+
+## Scoring Dimensions
+1. Founder Background: Track record, serial entrepreneurship, education, domain expertise, team composition
+2. Strategic Position: Market timing, competitive edge, roadmap clarity, vision communication
+3. Execution Velocity: Activity cadence, hiring velocity, shipping pace
+4. Traction Momentum: Revenue growth, user reviews, investor quality
+5. Market & Scalability: TAM, competitive landscape, innovation, defensibility
+
+## Pages
+- [Homepage](https://unicornscreener.vc): Main landing page with startup analysis tool
+- [Leaderboard](https://unicornscreener.vc/leaderboard): Ranked list of the highest-scoring startups analyzed so far
+- [Alternatives](https://unicornscreener.vc/alternatives): How Unicorn Screener compares to other startup intelligence tools
+- [Blog](https://unicornscreener.vc/blog): Data-driven articles on startup evaluation and venture capital research
+- [For AI Agents](https://unicornscreener.vc/docs/ai-agents): API documentation for programmatic access from Claude, GPT, and custom AI agents
+- [Contact](https://unicornscreener.vc/contact): Get in touch with the Unicorn Screener team
+- [Privacy Policy](https://unicornscreener.vc/privacy-policy): How we handle your data
+- [Terms and Conditions](https://unicornscreener.vc/terms-and-conditions): Usage terms
+- [Refund Policy](https://unicornscreener.vc/refund-policy): 14-day refund policy for paid reports
+
+## Agent workflow
+Start with GET /api/agent/lookup?name=<exact startup name> to retrieve an existing score and summary for free (60 requests/hour/IP). found:false does not establish that a company is absent or low quality. Check analyzedAt for freshness.
+Resolve ambiguous identities with GET /api/autocomplete?q=<name> (2-60 characters). Empty suggestions do not prove that a company does not exist.
+Within the user's authorization, POST /api/request-report with startupName, a permitted non-disposable email, a stable persisted fingerprint, and newsletter:false. This starts a new screening and consumes the free allowance; do not rotate caller identities to bypass quotas.
+Success may include memoUrl and slug. Poll GET /api/screen-status?slug=<returned slug> every 10 seconds with a bounded timeout. Follow moved/publishedSlug; stop on ready, failed, refresh-failed or unknown. Do not repeat POST while waiting. If no slug is returned, wait for the email link.
+For HTTP 429 limit_reached (email, fingerprint, cookie or ip), stop and use the website for paid options. For rate_limited, respect resetInSeconds when present and otherwise back off. Additional daily IP and hourly limits apply. No unlimited free analysis or private-data access is offered.
+- [OpenAPI 3.1 specification](https://unicornscreener.vc/openapi.json): Importable HTTP API operations and response schemas
+
+## Full content
+For LLM ingestion, a flattened concatenation of the full blog content is available at https://unicornscreener.vc/llms-full.txt.
+
+## Blog Posts
+- [Open Source Is Eating SaaS. AI Cut Switching Costs](https://unicornscreener.vc/blog/open-source-ai-is-eating-saas-vcs-should-pay-attention): Open-source tools now rival paid SaaS while AI makes migration cheaper. The subscription moat is shifting from locked code to service, trust, and speed.
+- [Chinese AI Is Closing the Silicon Valley Gap Fast](https://unicornscreener.vc/blog/chinese-ai-is-closing-the-silicon-valley-gap-fast): DeepSeek wiped $600B from Nvidia's market cap overnight. Now GLM-5.3 tops security benchmarks and Chinese labs are collapsing token prices. Here's what the US-China AI gap actually looks like in 2026.
+- [6 Nuclear SMR Startups Powering the AI Datacenter Boom](https://unicornscreener.vc/blog/6-nuclear-smr-startups-powering-the-ai-datacenter-boom): AI datacenters are drinking the grid dry. These 6 nuclear SMR startups are raising billions to deliver the clean, firm power Big Tech can't live without.
+- [Impossible Startup Ideas: Why Disruptive Beats Incremental](https://unicornscreener.vc/blog/impossible-startup-ideas-disruptive-vs-incremental): Most investors back incremental ideas because the brain cannot picture what does not exist yet. The biggest unicorns came from ideas that once seemed impossible.
+- [World Models: The AI Breakthrough That Could Dethrone LLMs](https://unicornscreener.vc/blog/world-models-the-ai-breakthrough-that-could-dethrone-llms): Yann LeCun quit Meta, called LLMs a dead end, and raised $1 billion to prove it. Here is why world models are the AI bet every investor needs to understand.
+- [7 Humanoid Robot Startups Racing to Replace Human Labor](https://unicornscreener.vc/blog/7-humanoid-robot-startups-racing-to-replace-human-labor): Robots are working in Renault factories and SF Express warehouses today. Meet the 7 humanoid startups most likely to win the race to replace human labor.
+- [Cybersecurity Startups: A $244B Market Opportunity in 2026](https://unicornscreener.vc/blog/cybersecurity-startups-a-244b-market-opportunity-in-2026): Gartner projects $244B in 2026 security spend. Cybersecurity M&A hit a record $102B last year. Here's the investment case every VC should internalize.
+- [AI Infrastructure vs AI Apps: Where Should VCs Bet?](https://unicornscreener.vc/blog/ai-infrastructure-vs-ai-apps-where-should-vcs-bet): Enterprise GenAI spend tripled to $37B in 2025, split nearly 50/50 between infra and apps. Here's the framework every serious investor needs to decide.
+- [8 Physical AI Startups to Watch: Figure, Apptronik & the Robot Economy](https://unicornscreener.vc/blog/8-physical-ai-startups-racing-to-build-the-robot-economy): Robotics startups raised nearly $14B in 2025. The 8 physical AI companies to track, split between humanoid makers (Figure, Apptronik, 1X) and robot-brain labs, with round sizes and backers.
+- [8 Quantum & Photonics Startups VCs Are Watching in 2026](https://unicornscreener.vc/blog/8-quantum-photonics-startups-vcs-are-watching-in-2026): The biggest checks in deep tech are flowing into light-based computing. Here are 8 private, independent quantum and photonics startups worth tracking now.
+- [Deal Flow Quality vs Quantity: What the VC Data Says](https://unicornscreener.vc/blog/deal-flow-quality-vs-quantity-what-the-vc-data-says): Back fewer deals with conviction, or take more shots on goal? The data says the right answer flips at the seed stage. Here's the rule that actually holds.
+- [How to Evaluate AI Startups Before Writing the Check](https://unicornscreener.vc/blog/how-to-evaluate-ai-startups-before-writing-the-check): 61% of all global VC went to AI startups in 2025. But 80% will still fail. Here's the 5-question framework that separates real moats from expensive hype.
+- [The SaaSpocalypse: Are AI Agents Really Killing SaaS?](https://unicornscreener.vc/blog/the-saaspocalypse-are-ai-agents-really-killing-saas): Wall Street wiped billions off software stocks betting AI agents kill SaaS. Here's what the data actually says, and where the smart money is going instead.
+- [Startup Valuation Methods Early Stage: The VC Playbook](https://unicornscreener.vc/blog/startup-valuation-methods-early-stage-the-vc-playbook): No revenue, no problem? Early-stage startup valuation is more art than science — but VCs use 5 specific methods. Here's exactly how each one works.
+- [Angel Investing Framework for Beginners: 6 Rules That Work](https://unicornscreener.vc/blog/angel-investing-framework-for-beginners-6-rules-that-work): Most first-time angels lose money on their first five deals. This research-backed framework tells you why — and exactly how to avoid it.
+- [Why Startups Fail: Top Reasons Ranked From 431 Post-Mortems](https://unicornscreener.vc/blog/why-startups-fail-what-the-data-actually-shows): No market need? Ran out of cash? CB Insights' 431 startup post-mortems rank the real killers, and the #1 reason is not the one founders expect. Full breakdown with percentages.
+- [Startup Traction Metrics That Matter to VCs in 2026](https://unicornscreener.vc/blog/startup-traction-metrics-that-matter-to-vcs-in-2026): Most founders track the wrong numbers. Here are the 6 startup traction metrics VCs actually use to separate real momentum from noise — with benchmarks.
+- [Network Effects: The Moat That Turns Startups Into Giants](https://unicornscreener.vc/blog/network-effects-the-moat-that-turns-startups-into-giants): 70% of all tech value created since 1994 came from companies with network effects. Here's the framework every VC-curious investor needs to understand why.
+- [7 Product Market Fit Indicators Every Investor Should Track](https://unicornscreener.vc/blog/7-product-market-fit-indicators-every-investor-should-track): 42% of startups fail because they build something nobody needs. Here are the 7 early-stage PMF indicators VCs actually use to separate real traction from noise.
+- [Total Addressable Market Sizing: The Framework VCs Actually Use](https://unicornscreener.vc/blog/total-addressable-market-sizing-the-framework-vcs-actually-u): 42% of startups fail because they misjudge market size. Here's the step-by-step TAM sizing framework that separates fundable from forgettable.
+- [5 YC Startup Batch 2026 Breakouts Worth Watching Now](https://unicornscreener.vc/blog/5-yc-startup-batch-2026-breakouts-worth-watching-now): YC's W26 batch may be the strongest in its history. Here are 5 verified standout startups — with real traction, elite founders, and serious investor attention.
+- [7 AI Agent Startups Top VCs Backed in 2026: Who Raised What](https://unicornscreener.vc/blog/7-ai-agent-startups-funded-by-top-vcs-in-2026): The exact rounds, valuations and lead investors behind 7 AI agent startups, from legal to HVAC. Who raised what, from whom, and the market math behind the checks.
+- [6 Climate Tech Startups Reshaping the Grid (and Industry) in 2026](https://unicornscreener.vc/blog/6-climate-tech-startups-reshaping-the-grid-and-industry-in-2026): Climate tech VC hit $40.5B in 2025. These 6 verified, independently operating startups are where the smart money is watching — and why.
+- [7 European Fintech Startups to Watch in 2026: Funding & Backers](https://unicornscreener.vc/blog/7-emerging-fintech-startups-in-europe-to-watch-in-2026): Allica Bank, Finom and 5 more European fintechs, with their latest rounds, valuations and lead investors. Europe minted a fintech unicorn every 6 weeks; these are next in line.
+- [Why Y Combinator Produces More Unicorns Than Any Other Accelerator](https://unicornscreener.vc/blog/why-y-combinator-produces-more-unicorns-than-any-other-accel): YC's unicorn creation rate is 4.5%, nearly double every competitor. Here's the exact system behind that number, broken into five unfair advantages.
+- [6 Rising AI Startups Positioned for Unicorn Status by 2026](https://unicornscreener.vc/blog/7-rising-ai-startups-positioned-for-unicorn-status-by-2026): Most named AI startups already crossed $1B. These six haven't, but they're growing fast, raising at premium multiples, and on the shortlist of every top-tier VC.
+- [9 Breakout European Startups to Watch in 2026](https://unicornscreener.vc/blog/9-breakout-european-startups-to-watch-in-2026): Europe minted 12 new unicorns in 2025. These nine startups are raising at breakneck speed and the smartest VCs are already paying attention.
+- [8 Most Promising Israeli Startups to Watch in 2026](https://unicornscreener.vc/blog/8-most-promising-israeli-startups-to-watch-in-2026): Israel's startup ecosystem minted 10 new unicorns in 2025. These eight companies are next in line—and the smart money is already piling in.
+- [9 Cybersecurity Startups to Watch in 2026](https://unicornscreener.vc/blog/best-cybersecurity-startups-to-watch-in-2026): Cybersecurity startups raised $12B in 2025. These are the nine companies the sharpest VCs are quietly loading up on before the market catches on.
+- [Founder-Market Fit: Why It Matters More Than the Idea](https://unicornscreener.vc/blog/founder-market-fit-why-it-matters-more-than-the-idea): Research shows founder-market fit predicts success better than product or idea quality. Here's why investors prioritize the founder-market match.
+- [Does Founder Age Predict Startup Success? Data Says Yes](https://unicornscreener.vc/blog/does-founder-age-predict-startup-success-data-says-yes): Research on 2.7 million founders reveals a surprising age peak for unicorn creation. Here's what the data shows about founder age and startup outcomes.
+- [Ideal Co-Founder Number: 2 or 3? Data Says Both Win](https://unicornscreener.vc/blog/ideal-co-founder-number-2-or-3-data-says-both-win): Research on 10,000+ startups shows the optimal founding team size. The answer depends on stage, industry, and one critical factor most founders miss.
+- [Serial Entrepreneur Success Rates: What the Data Shows](https://unicornscreener.vc/blog/serial-entrepreneur-success-rates-what-the-data-shows): Serial entrepreneurs succeed 30% more often than first-timers—but the data reveals surprising patterns about who wins and why.
+- [7 Startup Red Flags Investors Miss (Until It's Too Late)](https://unicornscreener.vc/blog/7-startup-red-flags-investors-miss-until-its-too-late): CB Insights data shows 90% of startups fail—but most red flags appear early. Here's what research reveals about the warning signs investors overlook.
+- [Angel Investor Due Diligence Checklist (2026)](https://unicornscreener.vc/blog/angel-investor-due-diligence-checklist-2026): Professional angel investors use structured due diligence to cut failure rates in half. Here's the research-backed checklist that separates winners from losers.
+- [Why Israel Has the Most Startups Per Capita in the World](https://unicornscreener.vc/blog/israel-startup-ecosystem-why-so-many-unicorns): Israel has more startups per capita than any other nation. Here's what the data reveals about the Startup Nation's unicorn factory.
+- [How to Evaluate Startup Unicorn Potential in 2026](https://unicornscreener.vc/blog/how-to-evaluate-startup-unicorn-potential-in-2026): Only 0.07% of startups reach unicorn status. Learn the data-driven framework VCs use to identify billion-dollar companies before they scale.
+- [What Makes a Startup a Unicorn? The Data Behind the 0.07%](https://unicornscreener.vc/blog/what-makes-a-startup-a-unicorn): Only 0.07% of startups ever reach a $1B valuation. Academic research reveals the patterns that separate unicorns from the rest.
+- [5 Founder Traits That Predict Startup Success According to Research](https://unicornscreener.vc/blog/founder-traits-predict-startup-success): Harvard and Stanford research reveals five founder characteristics that consistently predict startup success. Here's what the data shows.
+- [The Power Law: Why 90% of VC Returns Come From 10% of Deals](https://unicornscreener.vc/blog/power-law-vc-returns): Venture capital follows a power law distribution. Understanding this pattern is the key to better startup evaluation and deal selection.

@@ -1,0 +1,485 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Unicorn Screener Agent API",
+    "version": "1.0.0",
+    "description": "Startup research for AI agents: look up existing unicorn-potential scores, resolve company identities, request a web research memo and follow its progress. Public HTTP API with no API key; usage limits apply. Scores support research and are not investment advice.",
+    "termsOfService": "https://unicornscreener.vc/terms-and-conditions",
+    "contact": {
+      "name": "Unicorn Screener",
+      "url": "https://unicornscreener.vc/contact"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://unicornscreener.vc"
+    }
+  ],
+  "externalDocs": {
+    "url": "https://unicornscreener.vc/docs/ai-agents"
+  },
+  "security": [],
+  "paths": {
+    "/api/agent/lookup": {
+      "get": {
+        "operationId": "lookupStartup",
+        "summary": "Look up an existing startup score and summary",
+        "description": "Free existing-result lookup; does not launch analysis. Exact name is normalized to a slug, not fuzzy-matched. 60 requests/hour/IP. Use for public startup research. found:false is not a negative assessment. Check analyzedAt and cache responses.",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "required": true,
+            "description": "Exact startup name.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "An existing result or found:false.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/LookupFound"
+                    },
+                    {
+                      "$ref": "#/components/schemas/LookupMissing"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Usage limit reached. Preserve caller identity and back off; follow resetInSeconds when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/autocomplete": {
+      "get": {
+        "operationId": "findStartupSuggestions",
+        "summary": "Resolve a startup name to candidate companies",
+        "description": "An empty results array may indicate no match, invalid query length, unavailable suggestions or throttling. Verify domain before requesting a screening. Cache results; do not enumerate companies in bulk.",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "description": "Company name fragment, trimmed.",
+            "schema": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 60
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company name and domain suggestions.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Suggestions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/request-report": {
+      "post": {
+        "operationId": "requestStartupMemo",
+        "summary": "Request a new asynchronous startup research memo",
+        "description": "Consumes the eligible caller free screening allowance. Requires user authorization and a permitted valid non-disposable email. Persist the same fingerprint for the caller and preserve existing visitor cookies. Never rotate identities or IPs to bypass limits. newsletter must be false without explicit opt-in. A web memo is the deliverable, with an email link when ready. Acceptance does not mean completion. Paid options are available on the website; this endpoint does not accept payment tokens. Avoid blind retries and never repeat POST while polling.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MemoRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Accepted. slug and memoUrl are optional; if absent, use the email notification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemoAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Usage limit reached. Preserve caller identity and back off; follow resetInSeconds when present.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error. Avoid blind retries of screening requests.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/screen-status": {
+      "get": {
+        "operationId": "getScreeningStatus",
+        "summary": "Read progress for a returned memo slug",
+        "description": "Poll a returned slug every 10 seconds with a finite timeout. running/refreshing continue; moved supplies publishedSlug to follow; ready/failed/refresh-failed are terminal. A failed refresh preserves the previous memo. Stop on unknown. Do not trigger another screening while waiting.",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "query",
+            "required": true,
+            "description": "Slug returned by requestStartupMemo or publishedSlug from moved.",
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status fields vary by state.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScreeningStatus"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No current status exists.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnknownStatus"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or missing input.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "email",
+              "fingerprint",
+              "cookie",
+              "ip"
+            ]
+          },
+          "resetInSeconds": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "error"
+        ]
+      },
+      "LookupMissing": {
+        "type": "object",
+        "properties": {
+          "found": {
+            "const": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "found"
+        ]
+      },
+      "LookupFound": {
+        "type": "object",
+        "properties": {
+          "found": {
+            "const": true,
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "classification": {
+            "type": "string"
+          },
+          "summary": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "website": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "hq": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "analyzedAt": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "found",
+          "name",
+          "score",
+          "classification",
+          "analyzedAt"
+        ]
+      },
+      "Suggestions": {
+        "type": "object",
+        "properties": {
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "domain": {
+                  "type": "string"
+                },
+                "logo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "name",
+                "domain",
+                "logo"
+              ]
+            }
+          }
+        },
+        "required": [
+          "results"
+        ]
+      },
+      "MemoRequest": {
+        "type": "object",
+        "properties": {
+          "startupName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User-authorized non-disposable email for the memo link."
+          },
+          "fingerprint": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Stable persisted identifier of the caller/user. Reuse across calls; never rotate to evade quotas."
+          },
+          "newsletter": {
+            "type": "boolean",
+            "default": false,
+            "description": "True only with explicit user newsletter consent."
+          }
+        },
+        "required": [
+          "startupName",
+          "email",
+          "fingerprint"
+        ]
+      },
+      "MemoAccepted": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "const": true
+          },
+          "message": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          },
+          "memoUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "ScreeningStatus": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "running",
+              "refreshing",
+              "ready",
+              "moved",
+              "failed",
+              "refresh-failed"
+            ]
+          },
+          "slug": {
+            "type": "string"
+          },
+          "publishedSlug": {
+            "type": "string"
+          },
+          "publishable": {
+            "type": "boolean"
+          },
+          "score": {
+            "type": "number"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "startedAt": {
+            "type": "string"
+          },
+          "step": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "done": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "facts": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "logoUrl": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "website": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "slug"
+        ]
+      },
+      "UnknownStatus": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "const": "unknown"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "state",
+          "slug"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,33 @@
+generated: '2026-09-10'
+method: searched
+source: https://unicornscreener.vc/docs/ai-agents
+note: >-
+  Limits are documented in prose on the agent docs page and in the OpenAPI operation
+  descriptions. No X-RateLimit-* / RateLimit-* response headers are documented; the
+  runtime signal is the 429 status plus the body's error/reason/resetInSeconds fields.
+limit_count: 3
+exhaustion_status: 429
+retry_signal:
+  field: resetInSeconds
+  detail: Present on error:rate_limited; may be omitted on lookup throttling. Back off when absent.
+response_headers: none documented
+limits:
+- scope: per-ip
+  operation: lookupStartup
+  window: 1 hour
+  limit: 60
+  detail: A free lookup is limited to 60 requests per hour per IP.
+- scope: per-caller
+  operation: requestStartupMemo
+  window: lifetime (free allowance)
+  limit: 1
+  detail: >-
+    One free screening per caller, enforced across email, fingerprint and an existing
+    visitor cookie. Additional paid screenings are purchased on the website.
+- scope: per-ip
+  operation: requestStartupMemo
+  window: 1 day
+  limit: null
+  detail: >-
+    Shared IP addresses also have an undisclosed daily free-report cap to prevent abuse
+    from behind shared egress.

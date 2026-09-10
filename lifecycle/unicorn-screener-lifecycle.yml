@@ -1,0 +1,21 @@
+generated: '2026-09-10'
+method: searched
+source: https://unicornscreener.vc/docs/ai-agents
+note: >-
+  Searched the site and docs for versioning, deprecation, SLA and status surfaces.
+  The API carries a single spec version and publishes no dated changelog, deprecation
+  policy or status page.
+versioning:
+  scheme: single-version
+  current: 1.0.0
+  negotiation: none (no path or header version selector)
+deprecation:
+  policy: none published
+  sunset_headers: not documented (RFC 8594 Deprecation/Sunset not observed)
+  deprecated_operations: []
+status_page:
+  url: null
+  detail: No status/uptime page found.
+sla:
+  url: null
+  detail: No SLA published; the API is a free/low-cost public research surface.

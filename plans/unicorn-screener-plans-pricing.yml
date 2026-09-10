@@ -1,0 +1,38 @@
+generated: '2026-09-10'
+method: searched
+source: https://unicornscreener.vc/docs/ai-agents
+note: >-
+  Pricing is stated on the homepage FAQ and agent docs, not on a dedicated /pricing page
+  (/pricing returns 404). No machine-readable pricing/catalog endpoint is published. A
+  "/bulk-analysis" section is advertised as NEW but its pricing is not disclosed.
+currency: USD
+plan_count: 2
+plans:
+- name: Free
+  price: 0
+  currency: USD
+  billing_period: none
+  included:
+    lookups: Unlimited lookups of existing results, 60 requests/hour/IP
+    screenings: 1 free screening (new memo) per caller, tracked by email + fingerprint + cookie
+  limits:
+    lookup: 60/hour/IP
+    screening: 1 per caller; shared-IP daily cap
+  detail: No signup required for the first free report; no API key required.
+- name: Per report
+  price: 9
+  currency: USD
+  billing_period: one-time
+  included:
+    screenings: 1 additional startup research memo
+  detail: >-
+    "$9" per report, one-time (no subscription). Purchased through the website; the
+    request-report API does not accept a payment token. Positioned against a junior
+    analyst's 4-8 hour due-diligence pass. A 14-day refund policy applies (/refund-policy).
+- name: Bulk analysis
+  price: null
+  currency: USD
+  billing_period: unknown
+  detail: >-
+    A "/bulk-analysis" offering is marked NEW on the site but no price or quota is
+    published; recorded as present-but-undisclosed rather than guessed.

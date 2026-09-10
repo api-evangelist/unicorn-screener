@@ -1,0 +1,57 @@
+generated: '2026-09-10'
+method: derived
+source: >-
+  Derived from openapi/unicorn-screener-openapi.json and the agent documentation at
+  https://unicornscreener.vc/docs/ai-agents. Cross-cutting runtime semantics for the
+  keyless Unicorn Screener Agent API.
+auth:
+  style: none
+  detail: Public keyless HTTP JSON API. No API key, OAuth or CAPTCHA. security:[] in the spec.
+  identity: >-
+    Callers are tracked for quota purposes by email, a stable client fingerprint and a
+    visitor cookie — not for authentication. Never rotate these to evade limits.
+idempotency:
+  coverage: none
+  detail: >-
+    No Idempotency-Key header or replay-protection token is documented. The single write
+    (requestStartupMemo) relies on caller fingerprint/email de-duplication and the docs
+    warning "never repeat POST while polling" — this is quota control, not idempotency.
+    Agents must avoid blind retries of screening requests to prevent duplicate memos.
+pagination:
+  style: none
+  detail: No list endpoint paginates; autocomplete returns a bounded results[] array.
+error_envelope:
+  shape: custom application/json { error, message?, reason?, resetInSeconds? }
+  standard: none (not RFC 9457 problem+json)
+  cross_ref: errors/unicorn-screener-problem-types.yml
+rate_limit_signaling:
+  headers: none documented (no X-RateLimit-* or RateLimit-* headers stated)
+  status: 429
+  body_signal: 'error: rate_limited with resetInSeconds (may be omitted on lookup throttling); reason names the limit (email|fingerprint|cookie|ip)'
+  cross_ref: rate-limits/unicorn-screener-rate-limits.yml
+versioning:
+  scheme: single spec version (info.version 1.0.0); no path or header version negotiation
+  detail: No dated changelog or deprecation policy is published (/changelog 404).
+async:
+  detail: >-
+    requestStartupMemo is asynchronous — it returns 200 acceptance with an optional slug
+    and memoUrl. Poll getScreeningStatus every 10 seconds with a bounded timeout; states
+    running/refreshing continue, moved supplies publishedSlug, ready/failed/refresh-failed
+    are terminal, unknown means stop. An email link is the fallback deliverable.
+reversibility:
+  applies: true
+  grade: na
+  surfaces:
+  - operation: requestStartupMemo
+    operationId: requestStartupMemo
+    write: creates an asynchronous research memo / screening
+    reversal: none
+    window: null
+    grade: na
+    note: >-
+      No cancel, void, delete or undo operation is documented for a requested screening;
+      the memo is a published research artifact, not a stateful resource the caller owns.
+      Recorded as na (no reversal path exists and none is asserted) rather than an invented window.
+dry_run:
+  mode: none
+  detail: No dry-run/preview/validation-only mode is documented for the screening request.

@@ -1,0 +1,45 @@
+overlay: 1.0.0
+info:
+  title: Unicorn Screener enrichment overlay
+  version: 1.0.0
+x-provenance:
+  generated: '2026-09-10'
+  method: generated
+  source: >-
+    Authored by the API Evangelist enrichment pipeline to layer discovery and
+    agent-readiness metadata onto openapi/unicorn-screener-openapi.json without
+    mutating the harvested spec.
+extends: ../openapi/unicorn-screener-openapi.json
+actions:
+- target: $.info
+  description: Record that the API is keyless and public, and cross-link agent docs.
+  update:
+    x-api-key-required: false
+    x-agent-friendly: true
+    x-docs: https://unicornscreener.vc/docs/ai-agents
+- target: $.info
+  update:
+    x-rate-limits:
+      lookup: 60 requests/hour/IP
+      screening: 1 free per caller (email + fingerprint + cookie); shared-IP daily cap
+      exhaustion-status: 429
+      retry-signal: resetInSeconds (present on rate_limited; may be omitted on lookup throttling)
+- target: $.paths['/api/request-report'].post
+  description: Flag the one mutating operation as an asynchronous, non-reversible request.
+  update:
+    x-async: true
+    x-write: true
+    x-reversible: false
+    x-consumes-allowance: true
+- target: $.paths['/api/agent/lookup'].get
+  update:
+    x-idempotent: true
+    x-cacheable: true
+- target: $.paths['/api/autocomplete'].get
+  update:
+    x-idempotent: true
+    x-cacheable: true
+- target: $.paths['/api/screen-status'].get
+  update:
+    x-idempotent: true
+    x-poll-interval-seconds: 10

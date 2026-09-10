@@ -1,0 +1,19 @@
+generated: '2026-09-10'
+method: derived
+source: >-
+  Derived from openapi/unicorn-screener-openapi.json (security:[], no securitySchemes)
+  and confirmed against https://unicornscreener.vc/docs/ai-agents ("No API key required",
+  "No CAPTCHA No Auth Required"). Confirmed live: GET /api/agent/lookup?name=Stripe
+  returned 200 JSON with no credentials.
+type: none
+schemes: []
+detail: >-
+  Public keyless HTTP JSON API. No API key, bearer token, OAuth, OpenID Connect or mutual
+  TLS is required or offered. All four operations are callable anonymously.
+identity_signals:
+  purpose: quota enforcement only, not authentication
+  fields:
+  - email (for the screening request and memo delivery)
+  - fingerprint (stable persisted caller identifier)
+  - cookie (existing visitor cookie)
+  guidance: Reuse these consistently across calls; never rotate email/fingerprint/cookie/IP to evade limits.

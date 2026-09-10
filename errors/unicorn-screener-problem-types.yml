@@ -1,0 +1,40 @@
+generated: '2026-09-10'
+method: derived
+source: >-
+  Derived from the 4xx/5xx responses in openapi/unicorn-screener-openapi.json and
+  the error handling described at https://unicornscreener.vc/docs/ai-agents. The API
+  returns a custom application/json Error envelope (not RFC 9457 problem+json).
+format: custom-json
+envelope:
+  content_type: application/json
+  fields:
+    error: Machine-readable error code (required). Known values include rate_limited.
+    message: Human-readable explanation (optional).
+    reason: For 429s, which limit was hit — one of email, fingerprint, cookie, ip.
+    resetInSeconds: Integer seconds to wait before retrying; present on rate_limited, may be omitted on lookup throttling.
+problem_types:
+- status: 400
+  code: invalid_input
+  title: Invalid or missing input
+  operations: [lookupStartup, findStartupSuggestions, requestStartupMemo, getScreeningStatus]
+  remediation: Supply required and correctly formatted fields; do not blindly retry.
+- status: 429
+  code: rate_limited
+  title: Usage limit reached
+  operations: [lookupStartup, requestStartupMemo]
+  reason_enum: [email, fingerprint, cookie, ip]
+  remediation: >-
+    Preserve caller identity and back off. Honor resetInSeconds when present. Never
+    rotate email, fingerprint, cookie or IP to evade the quota. Paid screenings are
+    available on the website.
+- status: 404
+  code: unknown_status
+  title: No current status exists for the slug
+  operations: [getScreeningStatus]
+  body: '{ "state": "unknown", "slug": "..." }'
+  remediation: Stop polling on an unknown status; the slug has no active screening.
+- status: 500
+  code: server_error
+  title: Server error
+  operations: [requestStartupMemo]
+  remediation: Avoid blind retries of screening requests; a memo may already be queued.

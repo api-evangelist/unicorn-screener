@@ -5,6 +5,7 @@ description: 'Startup research and screening over an HTTP JSON API: resolve a co
 url: https://raw.githubusercontent.com/api-evangelist/unicorn-screener/refs/heads/main/apis.yml
 created: '2026-09-10'
 modified: '2026-09-10'
+image: https://unicornscreener.vc/opengraph-image?9ac05864e0a0ce88
 specificationVersion: '0.21'
 tags:
 - Venture Capital
@@ -18,6 +19,7 @@ apis:
   description: HTTP JSON API, 4 paths in the served OpenAPI 3.1; a keyless agent lookup answers live.
   humanURL: https://unicornscreener.vc/docs/ai-agents
   baseURL: https://unicornscreener.vc
+  image: https://unicornscreener.vc/opengraph-image?9ac05864e0a0ce88
   tags:
   - Venture Capital
   - Startups
@@ -28,11 +30,41 @@ apis:
     url: https://unicornscreener.vc/docs/ai-agents
   - type: LLMsTxt
     url: https://unicornscreener.vc/llms.txt
-  - type: LLMsFullTxt
-    url: https://unicornscreener.vc/llms-full.txt
+  - type: MCPServer
+    url: mcp/unicorn-screener-mcp.yml
+  - type: Overlay
+    url: overlays/unicorn-screener-openapi-overlay.yaml
+  - type: Authentication
+    url: authentication/unicorn-screener-authentication.yml
+  - type: Conventions
+    url: conventions/unicorn-screener-conventions.yml
+  - type: ErrorCatalog
+    url: errors/unicorn-screener-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/unicorn-screener-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/unicorn-screener-lifecycle.yml
+  - type: DataModel
+    url: data-model/unicorn-screener-data-model.yml
+  - type: Plans
+    url: plans/unicorn-screener-plans-pricing.yml
+  - type: AgentSkill
+    url: skills/_index.yml
 common:
+- type: DomainSecurity
+  url: security/unicorn-screener-domain-security.yml
 - type: Website
   url: https://unicornscreener.vc
+- type: DeveloperPortal
+  url: https://unicornscreener.vc/docs/ai-agents
+- type: Blog
+  url: https://unicornscreener.vc/blog
+- type: Support
+  url: https://unicornscreener.vc/contact
+- type: TermsOfService
+  url: https://unicornscreener.vc/terms-and-conditions
+- type: PrivacyPolicy
+  url: https://unicornscreener.vc/privacy-policy
 maintainers:
 - FN: Unicorn Screener
   url: https://unicornscreener.vc
@@ -40,3 +72,8 @@ x-source:
   via: api-search/inbox#28 (buffalodebile)
   fetched: '2026-09-10'
   note: Pointers probed 200 via curl (the host 403s urllib), control 404s, keyless lookup returned JSON.
+x-enrichment:
+  date: '2026-09-10'
+  status: enriched
+  artifacts_added: 13
+  pass: local-v3

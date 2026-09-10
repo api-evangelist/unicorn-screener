@@ -1,0 +1,40 @@
+generated: '2026-09-10'
+method: derived
+source: >-
+  Derived from the component schemas in openapi/unicorn-screener-openapi.json. The API
+  exposes a small, mostly flat model; the load-bearing link is the slug that carries a
+  memo request through to its screening status.
+entities:
+- name: LookupResult
+  schema: LookupFound / LookupMissing
+  key: name (exact, slug-normalized)
+  fields: [found, name, score, classification, summary, website, hq, analyzedAt]
+- name: Suggestion
+  schema: Suggestions.results[]
+  fields: [name, domain, logo]
+- name: MemoRequest
+  schema: MemoRequest
+  fields: [startupName, email, fingerprint, newsletter]
+- name: MemoAcceptance
+  schema: MemoAccepted
+  fields: [success, message, slug, memoUrl]
+- name: ScreeningStatus
+  schema: ScreeningStatus / UnknownStatus
+  key: slug
+  fields: [state, slug, publishedSlug, publishable, score, reason, name, startedAt, step, message, done, facts, logoUrl, website]
+relationships:
+- from: MemoAcceptance
+  to: ScreeningStatus
+  type: has_one
+  via: slug
+  detail: The slug returned by requestStartupMemo is polled via getScreeningStatus.
+- from: ScreeningStatus
+  to: ScreeningStatus
+  type: has_one
+  via: publishedSlug
+  detail: A "moved" state supplies publishedSlug pointing at the canonical published memo status.
+- from: ScreeningStatus
+  to: LookupResult
+  type: belongs_to
+  via: name
+  detail: A completed screening becomes a lookupable existing result, retrievable by name.

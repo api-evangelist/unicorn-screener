@@ -1,0 +1,13 @@
+generated: '2026-09-10'
+method: generated
+source: Authored from openapi/unicorn-screener-openapi.json operationIds; grounded, not invented.
+api: Unicorn Screener API
+skills:
+- name: unicorn-screener-lookup-startup
+  file: unicorn-screener-lookup-startup.md
+  description: Free lookup of an existing startup score and summary, resolving identity first.
+  operations: [findStartupSuggestions, lookupStartup]
+- name: unicorn-screener-request-memo
+  file: unicorn-screener-request-memo.md
+  description: Request a new async research memo and poll screening status to completion.
+  operations: [lookupStartup, requestStartupMemo, getScreeningStatus]

@@ -1,0 +1,70 @@
+generated: '2026-09-10'
+method: derived
+source: >-
+  Derived from openapi/unicorn-screener-openapi.json (4 operations). No official
+  hosted or stdio MCP server was found: POST tools/list to https://unicornscreener.vc/mcp
+  and /api/mcp both returned the site's SPA HTML shell (not JSON-RPC), and no npm/PyPI
+  MCP package is published. This is a CANDIDATE tool list, not a shipped server.
+name: Unicorn Screener (candidate MCP)
+description: >-
+  Candidate MCP tool surface derived from the public keyless Unicorn Screener Agent
+  API. Nobody ships an MCP server today; these tools map 1:1 to the OpenAPI operations
+  an agent can already call over plain HTTP.
+deployment:
+  mode: none
+  auth: none
+  verified: derived
+  note: >-
+    No MCP server exists. The underlying REST API is keyless and directly callable;
+    an MCP wrapper would need to be authored. mode:none means this is a derived
+    candidate, not a reachable endpoint.
+tools:
+- name: lookupStartup
+  description: Look up an existing startup score and summary (free, no analysis launched).
+  rest: /api/agent/lookup
+  method: GET
+  status: candidate
+  inputSchema:
+    type: object
+    required: [name]
+    properties:
+      name:
+        type: string
+        description: Exact startup name (normalized to a slug, not fuzzy-matched).
+- name: findStartupSuggestions
+  description: Resolve a startup name fragment to candidate companies with domains.
+  rest: /api/autocomplete
+  method: GET
+  status: candidate
+  inputSchema:
+    type: object
+    required: [q]
+    properties:
+      q:
+        type: string
+        description: Company name fragment, 2-60 characters.
+- name: requestStartupMemo
+  description: Request a new asynchronous startup research memo (consumes free allowance).
+  rest: /api/request-report
+  method: POST
+  status: candidate
+  inputSchema:
+    type: object
+    required: [startupName, email, fingerprint]
+    properties:
+      startupName: {type: string}
+      email: {type: string, format: email}
+      fingerprint: {type: string, description: Stable persisted caller identifier; never rotate.}
+      newsletter: {type: boolean, default: false}
+- name: getScreeningStatus
+  description: Poll progress for a returned memo slug until a terminal state.
+  rest: /api/screen-status
+  method: GET
+  status: candidate
+  inputSchema:
+    type: object
+    required: [slug]
+    properties:
+      slug:
+        type: string
+        description: Slug returned by requestStartupMemo, or publishedSlug from a moved state.

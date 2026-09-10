@@ -1,0 +1,29 @@
+generated: '2026-09-10'
+method: probed
+source: live curl probes with a browser User-Agent against unicornscreener.vc
+note: >-
+  Every /.well-known/ path returned HTTP 404 as the site's Next.js SPA HTML shell
+  (data-theme="unicorn"), not a document. No WellKnown, SecurityTxt, oauth or
+  openid pointer is emitted because the provider serves none of these surfaces.
+  A recorded absence, not a presence.
+hosts:
+- host: unicornscreener.vc
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+    file: null
+  - path: /.well-known/openid-configuration
+    status: 404
+    file: null
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+    file: null
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    file: null
+  - path: /.well-known/api-catalog
+    status: 404
+    file: null
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    file: null
