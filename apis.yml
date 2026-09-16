@@ -15,25 +15,20 @@ tags:
 - Investing
 - AI Agents
 apis:
-- name: Unicorn Screener API
-  description: HTTP JSON API, 4 paths in the served OpenAPI 3.1; a keyless agent lookup answers live.
+- aid: unicorn-screener:unicorn-screener-agent-api
+  name: Unicorn Screener Agent API
+  description: The Agent API from Unicorn Screener — 1 operation(s) for agent.
   humanURL: https://unicornscreener.vc/docs/ai-agents
   baseURL: https://unicornscreener.vc
-  image: https://unicornscreener.vc/opengraph-image?9ac05864e0a0ce88
   tags:
-  - Venture Capital
-  - Startups
+  - Agent
   properties:
   - type: OpenAPI
-    url: https://unicornscreener.vc/openapi.json
+    url: openapi/unicorn-screener-agent-api-openapi.yml
   - type: Documentation
     url: https://unicornscreener.vc/docs/ai-agents
   - type: LLMsTxt
     url: https://unicornscreener.vc/llms.txt
-  - type: MCPServer
-    url: mcp/unicorn-screener-mcp.yml
-  - type: Overlay
-    url: overlays/unicorn-screener-openapi-overlay.yaml
   - type: Authentication
     url: authentication/unicorn-screener-authentication.yml
   - type: Conventions
@@ -48,9 +43,97 @@ apis:
     url: data-model/unicorn-screener-data-model.yml
   - type: Plans
     url: plans/unicorn-screener-plans-pricing.yml
-  - type: AgentSkill
-    url: skills/_index.yml
+- aid: unicorn-screener:unicorn-screener-autocomplete-api
+  name: Unicorn Screener Autocomplete API
+  description: The Autocomplete API from Unicorn Screener — 1 operation(s) for autocomplete.
+  humanURL: https://unicornscreener.vc/docs/ai-agents
+  baseURL: https://unicornscreener.vc
+  tags:
+  - Autocomplete
+  properties:
+  - type: OpenAPI
+    url: openapi/unicorn-screener-autocomplete-api-openapi.yml
+  - type: Documentation
+    url: https://unicornscreener.vc/docs/ai-agents
+  - type: LLMsTxt
+    url: https://unicornscreener.vc/llms.txt
+  - type: Authentication
+    url: authentication/unicorn-screener-authentication.yml
+  - type: Conventions
+    url: conventions/unicorn-screener-conventions.yml
+  - type: ErrorCatalog
+    url: errors/unicorn-screener-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/unicorn-screener-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/unicorn-screener-lifecycle.yml
+  - type: DataModel
+    url: data-model/unicorn-screener-data-model.yml
+  - type: Plans
+    url: plans/unicorn-screener-plans-pricing.yml
+- aid: unicorn-screener:unicorn-screener-request-report-api
+  name: Unicorn Screener Request Report API
+  description: The Request Report API from Unicorn Screener — 1 operation(s) for request report.
+  humanURL: https://unicornscreener.vc/docs/ai-agents
+  baseURL: https://unicornscreener.vc
+  tags:
+  - Request Report
+  properties:
+  - type: OpenAPI
+    url: openapi/unicorn-screener-request-report-api-openapi.yml
+  - type: Documentation
+    url: https://unicornscreener.vc/docs/ai-agents
+  - type: LLMsTxt
+    url: https://unicornscreener.vc/llms.txt
+  - type: Authentication
+    url: authentication/unicorn-screener-authentication.yml
+  - type: Conventions
+    url: conventions/unicorn-screener-conventions.yml
+  - type: ErrorCatalog
+    url: errors/unicorn-screener-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/unicorn-screener-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/unicorn-screener-lifecycle.yml
+  - type: DataModel
+    url: data-model/unicorn-screener-data-model.yml
+  - type: Plans
+    url: plans/unicorn-screener-plans-pricing.yml
+- aid: unicorn-screener:unicorn-screener-screen-status-api
+  name: Unicorn Screener Screen Status API
+  description: The Screen Status API from Unicorn Screener — 1 operation(s) for screen status.
+  humanURL: https://unicornscreener.vc/docs/ai-agents
+  baseURL: https://unicornscreener.vc
+  tags:
+  - Screen Status
+  properties:
+  - type: OpenAPI
+    url: openapi/unicorn-screener-screen-status-api-openapi.yml
+  - type: Documentation
+    url: https://unicornscreener.vc/docs/ai-agents
+  - type: LLMsTxt
+    url: https://unicornscreener.vc/llms.txt
+  - type: Authentication
+    url: authentication/unicorn-screener-authentication.yml
+  - type: Conventions
+    url: conventions/unicorn-screener-conventions.yml
+  - type: ErrorCatalog
+    url: errors/unicorn-screener-problem-types.yml
+  - type: RateLimits
+    url: rate-limits/unicorn-screener-rate-limits.yml
+  - type: Lifecycle
+    url: lifecycle/unicorn-screener-lifecycle.yml
+  - type: DataModel
+    url: data-model/unicorn-screener-data-model.yml
+  - type: Plans
+    url: plans/unicorn-screener-plans-pricing.yml
 common:
+- type: MCPServer
+  url: mcp/unicorn-screener-mcp.yml
+- type: Overlay
+  url: overlays/unicorn-screener-openapi-overlay.yaml
+- type: AgentSkill
+  url: skills/_index.yml
 - type: DomainSecurity
   url: security/unicorn-screener-domain-security.yml
 - type: Website
