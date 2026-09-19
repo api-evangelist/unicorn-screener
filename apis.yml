@@ -21,6 +21,8 @@ apis:
   humanURL: https://unicornscreener.vc/docs/ai-agents
   baseURL: https://unicornscreener.vc
   tags:
+  - Agents
+  tags_raw:
   - Agent
   properties:
   - type: OpenAPI
