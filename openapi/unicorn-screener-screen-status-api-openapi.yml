@@ -1,0 +1,131 @@
+openapi: 3.2.0
+info:
+  title: Unicorn Screener Agent Screen Status API
+  version: 1.0.0
+  description: 'Startup research for AI agents: look up existing unicorn-potential scores, resolve company identities, request a web research memo and follow its progress. Public HTTP API with no API key; usage limits apply. Scores support research and are not investment advice.'
+  termsOfService: https://unicornscreener.vc/terms-and-conditions
+  contact:
+    name: Unicorn Screener
+    url: https://unicornscreener.vc/contact
+servers:
+- url: https://unicornscreener.vc
+security: []
+tags:
+- name: Screen Status
+paths:
+  /api/screen-status:
+    get:
+      operationId: getScreeningStatus
+      summary: Read progress for a returned memo slug
+      description: Poll a returned slug every 10 seconds with a finite timeout. running/refreshing continue; moved supplies publishedSlug to follow; ready/failed/refresh-failed are terminal. A failed refresh preserves the previous memo. Stop on unknown. Do not trigger another screening while waiting.
+      parameters:
+      - name: slug
+        in: query
+        required: true
+        description: Slug returned by requestStartupMemo or publishedSlug from moved.
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: Status fields vary by state.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScreeningStatus'
+        '404':
+          description: No current status exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnknownStatus'
+        '400':
+          description: Invalid or missing input.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Screen Status
+components:
+  schemas:
+    UnknownStatus:
+      type: object
+      properties:
+        state:
+          type: string
+          const: unknown
+        slug:
+          type: string
+      required:
+      - state
+      - slug
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        reason:
+          type: string
+          enum:
+          - email
+          - fingerprint
+          - cookie
+          - ip
+        resetInSeconds:
+          type: integer
+          minimum: 0
+      required:
+      - error
+    ScreeningStatus:
+      type: object
+      properties:
+        state:
+          type: string
+          enum:
+          - running
+          - refreshing
+          - ready
+          - moved
+          - failed
+          - refresh-failed
+        slug:
+          type: string
+        publishedSlug:
+          type: string
+        publishable:
+          type: boolean
+        score:
+          type: number
+        reason:
+          type: string
+        name:
+          type: string
+        startedAt:
+          type: string
+        step:
+          type: string
+        message:
+          type: string
+        done:
+          type: array
+          items:
+            type: string
+        facts:
+          type: object
+          additionalProperties: true
+        logoUrl:
+          type:
+          - string
+          - 'null'
+        website:
+          type:
+          - string
+          - 'null'
+      required:
+      - state
+      - slug
+externalDocs:
+  url: https://unicornscreener.vc/docs/ai-agents

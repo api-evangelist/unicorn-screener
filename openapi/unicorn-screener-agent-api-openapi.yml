@@ -1,0 +1,116 @@
+openapi: 3.2.0
+info:
+  title: Unicorn Screener Agent API
+  version: 1.0.0
+  description: 'Startup research for AI agents: look up existing unicorn-potential scores, resolve company identities, request a web research memo and follow its progress. Public HTTP API with no API key; usage limits apply. Scores support research and are not investment advice.'
+  termsOfService: https://unicornscreener.vc/terms-and-conditions
+  contact:
+    name: Unicorn Screener
+    url: https://unicornscreener.vc/contact
+servers:
+- url: https://unicornscreener.vc
+security: []
+tags:
+- name: Agent
+paths:
+  /api/agent/lookup:
+    get:
+      operationId: lookupStartup
+      summary: Look up an existing startup score and summary
+      description: Free existing-result lookup; does not launch analysis. Exact name is normalized to a slug, not fuzzy-matched. 60 requests/hour/IP. Use for public startup research. found:false is not a negative assessment. Check analyzedAt and cache responses.
+      parameters:
+      - name: name
+        in: query
+        required: true
+        description: Exact startup name.
+        schema:
+          type: string
+          minLength: 1
+      responses:
+        '200':
+          description: An existing result or found:false.
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/LookupFound'
+                - $ref: '#/components/schemas/LookupMissing'
+        '400':
+          description: Invalid or missing input.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Usage limit reached. Preserve caller identity and back off; follow resetInSeconds when present.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Agent
+components:
+  schemas:
+    LookupFound:
+      type: object
+      properties:
+        found:
+          const: true
+          type: boolean
+        name:
+          type: string
+        score:
+          type: number
+          minimum: 0
+          maximum: 100
+        classification:
+          type: string
+        summary:
+          type:
+          - string
+          - 'null'
+        website:
+          type:
+          - string
+          - 'null'
+        hq:
+          type:
+          - string
+          - 'null'
+        analyzedAt:
+          type: string
+      required:
+      - found
+      - name
+      - score
+      - classification
+      - analyzedAt
+    LookupMissing:
+      type: object
+      properties:
+        found:
+          const: false
+          type: boolean
+      required:
+      - found
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        reason:
+          type: string
+          enum:
+          - email
+          - fingerprint
+          - cookie
+          - ip
+        resetInSeconds:
+          type: integer
+          minimum: 0
+      required:
+      - error
+externalDocs:
+  url: https://unicornscreener.vc/docs/ai-agents

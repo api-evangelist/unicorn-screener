@@ -1,0 +1,64 @@
+openapi: 3.2.0
+info:
+  title: Unicorn Screener Agent Autocomplete API
+  version: 1.0.0
+  description: 'Startup research for AI agents: look up existing unicorn-potential scores, resolve company identities, request a web research memo and follow its progress. Public HTTP API with no API key; usage limits apply. Scores support research and are not investment advice.'
+  termsOfService: https://unicornscreener.vc/terms-and-conditions
+  contact:
+    name: Unicorn Screener
+    url: https://unicornscreener.vc/contact
+servers:
+- url: https://unicornscreener.vc
+security: []
+tags:
+- name: Autocomplete
+paths:
+  /api/autocomplete:
+    get:
+      operationId: findStartupSuggestions
+      summary: Resolve a startup name to candidate companies
+      description: An empty results array may indicate no match, invalid query length, unavailable suggestions or throttling. Verify domain before requesting a screening. Cache results; do not enumerate companies in bulk.
+      parameters:
+      - name: q
+        in: query
+        required: true
+        description: Company name fragment, trimmed.
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 60
+      responses:
+        '200':
+          description: Company name and domain suggestions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Suggestions'
+      tags:
+      - Autocomplete
+components:
+  schemas:
+    Suggestions:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              domain:
+                type: string
+              logo:
+                type:
+                - string
+                - 'null'
+            required:
+            - name
+            - domain
+            - logo
+      required:
+      - results
+externalDocs:
+  url: https://unicornscreener.vc/docs/ai-agents

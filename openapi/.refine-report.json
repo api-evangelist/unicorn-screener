@@ -1,0 +1,34 @@
+{
+  "provider": "unicorn-screener",
+  "sources": [
+    "_original/unicorn-screener-openapi.json"
+  ],
+  "outputs": [
+    "unicorn-screener-agent-api-openapi.yml",
+    "unicorn-screener-autocomplete-api-openapi.yml",
+    "unicorn-screener-request-report-api-openapi.yml",
+    "unicorn-screener-screen-status-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "unicorn-screener-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "unicorn-screener-openapi.json: tagged paths GET /api/agent/lookup -> Agent",
+    "unicorn-screener-openapi.json: tagged paths GET /api/autocomplete -> Autocomplete",
+    "unicorn-screener-openapi.json: tagged paths POST /api/request-report -> Request Report",
+    "unicorn-screener-openapi.json: tagged paths GET /api/screen-status -> Screen Status",
+    "unicorn-screener-openapi.json: declared missing tag: Agent",
+    "unicorn-screener-openapi.json: declared missing tag: Autocomplete",
+    "unicorn-screener-openapi.json: declared missing tag: Request Report",
+    "unicorn-screener-openapi.json: declared missing tag: Screen Status",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "unicorn-screener-agent-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unicorn-screener-autocomplete-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unicorn-screener-request-report-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "unicorn-screener-screen-status-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

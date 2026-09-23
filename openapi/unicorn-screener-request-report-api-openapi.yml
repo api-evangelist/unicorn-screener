@@ -1,0 +1,114 @@
+openapi: 3.2.0
+info:
+  title: Unicorn Screener Agent Request Report API
+  version: 1.0.0
+  description: 'Startup research for AI agents: look up existing unicorn-potential scores, resolve company identities, request a web research memo and follow its progress. Public HTTP API with no API key; usage limits apply. Scores support research and are not investment advice.'
+  termsOfService: https://unicornscreener.vc/terms-and-conditions
+  contact:
+    name: Unicorn Screener
+    url: https://unicornscreener.vc/contact
+servers:
+- url: https://unicornscreener.vc
+security: []
+tags:
+- name: Request Report
+paths:
+  /api/request-report:
+    post:
+      operationId: requestStartupMemo
+      summary: Request a new asynchronous startup research memo
+      description: Consumes the eligible caller free screening allowance. Requires user authorization and a permitted valid non-disposable email. Persist the same fingerprint for the caller and preserve existing visitor cookies. Never rotate identities or IPs to bypass limits. newsletter must be false without explicit opt-in. A web memo is the deliverable, with an email link when ready. Acceptance does not mean completion. Paid options are available on the website; this endpoint does not accept payment tokens. Avoid blind retries and never repeat POST while polling.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MemoRequest'
+      responses:
+        '200':
+          description: Accepted. slug and memoUrl are optional; if absent, use the email notification.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemoAccepted'
+        '400':
+          description: Invalid or missing input.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Usage limit reached. Preserve caller identity and back off; follow resetInSeconds when present.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Server error. Avoid blind retries of screening requests.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Request Report
+components:
+  schemas:
+    MemoAccepted:
+      type: object
+      properties:
+        success:
+          type: boolean
+          const: true
+        message:
+          type: string
+        slug:
+          type: string
+        memoUrl:
+          type: string
+          format: uri
+      required:
+      - success
+      - message
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        reason:
+          type: string
+          enum:
+          - email
+          - fingerprint
+          - cookie
+          - ip
+        resetInSeconds:
+          type: integer
+          minimum: 0
+      required:
+      - error
+    MemoRequest:
+      type: object
+      properties:
+        startupName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          format: email
+          description: User-authorized non-disposable email for the memo link.
+        fingerprint:
+          type: string
+          minLength: 1
+          description: Stable persisted identifier of the caller/user. Reuse across calls; never rotate to evade quotas.
+        newsletter:
+          type: boolean
+          default: false
+          description: True only with explicit user newsletter consent.
+      required:
+      - startupName
+      - email
+      - fingerprint
+externalDocs:
+  url: https://unicornscreener.vc/docs/ai-agents
