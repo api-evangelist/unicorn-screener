@@ -19,7 +19,6 @@ apis:
   name: Unicorn Screener Agent API
   description: The Agent API from Unicorn Screener — 1 operation(s) for agent.
   humanURL: https://unicornscreener.vc/docs/ai-agents
-  baseURL: https://unicornscreener.vc
   tags:
   - Agents
   tags_raw:
@@ -49,7 +48,6 @@ apis:
   name: Unicorn Screener Autocomplete API
   description: The Autocomplete API from Unicorn Screener — 1 operation(s) for autocomplete.
   humanURL: https://unicornscreener.vc/docs/ai-agents
-  baseURL: https://unicornscreener.vc
   tags:
   - Autocomplete
   properties:
@@ -77,7 +75,6 @@ apis:
   name: Unicorn Screener Request Report API
   description: The Request Report API from Unicorn Screener — 1 operation(s) for request report.
   humanURL: https://unicornscreener.vc/docs/ai-agents
-  baseURL: https://unicornscreener.vc
   tags:
   - Request Report
   properties:
@@ -105,7 +102,6 @@ apis:
   name: Unicorn Screener Screen Status API
   description: The Screen Status API from Unicorn Screener — 1 operation(s) for screen status.
   humanURL: https://unicornscreener.vc/docs/ai-agents
-  baseURL: https://unicornscreener.vc
   tags:
   - Screen Status
   properties:
