@@ -51,14 +51,25 @@ paths:
       - Agent
 components:
   schemas:
-    LookupMissing:
+    Error:
       type: object
       properties:
-        found:
-          const: false
-          type: boolean
+        error:
+          type: string
+        message:
+          type: string
+        reason:
+          type: string
+          enum:
+          - email
+          - fingerprint
+          - cookie
+          - ip
+        resetInSeconds:
+          type: integer
+          minimum: 0
       required:
-      - found
+      - error
     LookupFound:
       type: object
       properties:
@@ -93,24 +104,13 @@ components:
       - score
       - classification
       - analyzedAt
-    Error:
+    LookupMissing:
       type: object
       properties:
-        error:
-          type: string
-        message:
-          type: string
-        reason:
-          type: string
-          enum:
-          - email
-          - fingerprint
-          - cookie
-          - ip
-        resetInSeconds:
-          type: integer
-          minimum: 0
+        found:
+          const: false
+          type: boolean
       required:
-      - error
+      - found
 externalDocs:
   url: https://unicornscreener.vc/docs/ai-agents

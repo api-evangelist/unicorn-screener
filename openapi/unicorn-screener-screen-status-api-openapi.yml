@@ -49,6 +49,17 @@ paths:
       - Screen Status
 components:
   schemas:
+    UnknownStatus:
+      type: object
+      properties:
+        state:
+          type: string
+          const: unknown
+        slug:
+          type: string
+      required:
+      - state
+      - slug
     Error:
       type: object
       properties:
@@ -68,17 +79,6 @@ components:
           minimum: 0
       required:
       - error
-    UnknownStatus:
-      type: object
-      properties:
-        state:
-          type: string
-          const: unknown
-        slug:
-          type: string
-      required:
-      - state
-      - slug
     ScreeningStatus:
       type: object
       properties:
