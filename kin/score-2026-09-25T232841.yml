@@ -1,0 +1,54 @@
+# Kin Score artifact — unicorn-screener — 2026-09-25T232841
+# The API Evangelist rating (https://github.com/api-evangelist/kin-score). Generated; do not edit.
+---
+kin_score:
+  slug: unicorn-screener
+  schema_version: 0.23.0
+  scored_at: '2026-09-25'
+  run_ts: 2026-09-25T232841
+  composite: 40.0
+  band: developing
+  facets:
+    discoverability: 58.9
+    contract_quality: 46.5
+    contract_governance: 0.0
+    operational_transparency: 31.6
+    developer_ergonomics: 39.9
+    access_clarity: 52.6
+  agent_readiness:
+    score: 24.6
+    band: agent-aware
+    dimensions:
+      spec_presence: true
+      agentic_access: false
+      reversibility_documented: false
+      mcp_server: false
+      auth_clarity: bearer
+      idempotency: false
+      error_semantics: verified
+      openapi_examples: false
+      rate_limit_signal: documented
+      event_surface_described: false
+      agent_skills: derived
+      well_known_catalog: false
+      consent_identity: false
+      agent_card: false
+      dry_run_mode: false
+      delegated_identity: false
+      protected_resource_metadata: false
+      dynamic_client_registration: false
+      agentic_commerce: false
+  regulatory:
+    applies: true
+    regime: Horizontal (data, software, accessibility, platform)
+    regime_id: horizontal
+    score: 19.6
+    matched_via: fallback
+  provenance:
+    mcp: derived
+    skills: derived
+    contracts:
+      total: 4
+      derived: 0
+      coverage: 0.0
+      callable: 100.0
