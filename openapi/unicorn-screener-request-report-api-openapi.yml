@@ -53,25 +53,6 @@ paths:
       - Request Report
 components:
   schemas:
-    Error:
-      type: object
-      properties:
-        error:
-          type: string
-        message:
-          type: string
-        reason:
-          type: string
-          enum:
-          - email
-          - fingerprint
-          - cookie
-          - ip
-        resetInSeconds:
-          type: integer
-          minimum: 0
-      required:
-      - error
     MemoRequest:
       type: object
       properties:
@@ -94,6 +75,25 @@ components:
       - startupName
       - email
       - fingerprint
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        reason:
+          type: string
+          enum:
+          - email
+          - fingerprint
+          - cookie
+          - ip
+        resetInSeconds:
+          type: integer
+          minimum: 0
+      required:
+      - error
     MemoAccepted:
       type: object
       properties:

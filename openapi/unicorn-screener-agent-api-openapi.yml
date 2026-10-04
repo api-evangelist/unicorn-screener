@@ -51,6 +51,14 @@ paths:
       - Agent
 components:
   schemas:
+    LookupMissing:
+      type: object
+      properties:
+        found:
+          const: false
+          type: boolean
+      required:
+      - found
     Error:
       type: object
       properties:
@@ -104,13 +112,5 @@ components:
       - score
       - classification
       - analyzedAt
-    LookupMissing:
-      type: object
-      properties:
-        found:
-          const: false
-          type: boolean
-      required:
-      - found
 externalDocs:
   url: https://unicornscreener.vc/docs/ai-agents
