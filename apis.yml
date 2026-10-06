@@ -4,7 +4,7 @@ description: 'Startup research and screening over an HTTP JSON API: resolve a co
   company research and comparison.'
 url: https://raw.githubusercontent.com/api-evangelist/unicorn-screener/refs/heads/main/apis.yml
 created: '2026-09-10'
-modified: '2026-09-10'
+modified: '2026-10-06'
 image: https://unicornscreener.vc/opengraph-image?9ac05864e0a0ce88
 specificationVersion: '0.21'
 tags:
@@ -126,6 +126,8 @@ apis:
   - type: Plans
     url: plans/unicorn-screener-plans-pricing.yml
 common:
+- url: https://unicornscreener.vc/blog/feed.xml
+  type: BlogRSS
 - type: MCPServer
   url: mcp/unicorn-screener-mcp.yml
 - type: Overlay
