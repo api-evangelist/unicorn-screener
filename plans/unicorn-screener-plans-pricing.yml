@@ -36,3 +36,29 @@ plans:
   detail: >-
     A "/bulk-analysis" offering is marked NEW on the site but no price or quota is
     published; recorded as present-but-undisclosed rather than guessed.
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - free
+  - subscription
+  units: []
+  plans:
+  - name: Free
+    access: other
+    model: free
+    model_how: derived
+    units: []
+    periods: []
+  - name: Per report
+    access: other
+    model: subscription
+    model_how: derived
+    units: []
+    periods: []
+  - name: Bulk analysis
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods: []
