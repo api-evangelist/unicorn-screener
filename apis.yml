@@ -126,6 +126,10 @@ apis:
   - type: Plans
     url: plans/unicorn-screener-plans-pricing.yml
 common:
+- type: Plans
+  url: plans/unicorn-screener-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/unicorn-screener-rate-limits.yml
 - type: Pricing
   url: https://unicornscreener.vc/docs/ai-agents
 - url: https://unicornscreener.vc/blog/feed.xml
