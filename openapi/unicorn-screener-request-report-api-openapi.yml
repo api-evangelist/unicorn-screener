@@ -53,6 +53,22 @@ paths:
       - Request Report
 components:
   schemas:
+    MemoAccepted:
+      type: object
+      properties:
+        success:
+          type: boolean
+          const: true
+        message:
+          type: string
+        slug:
+          type: string
+        memoUrl:
+          type: string
+          format: uri
+      required:
+      - success
+      - message
     MemoRequest:
       type: object
       properties:
@@ -94,21 +110,5 @@ components:
           minimum: 0
       required:
       - error
-    MemoAccepted:
-      type: object
-      properties:
-        success:
-          type: boolean
-          const: true
-        message:
-          type: string
-        slug:
-          type: string
-        memoUrl:
-          type: string
-          format: uri
-      required:
-      - success
-      - message
 externalDocs:
   url: https://unicornscreener.vc/docs/ai-agents
